@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
 #import <PDFKit/PDFKit.h>
+#import "RCTView.h"
 
 #if __has_include(<React/RCTAssert.h>)
 #import <React/RCTBridgeModule.h>
@@ -311,7 +312,7 @@ using namespace facebook::react;
                 //Release old doc
                 _pdfDocument = Nil;
             }
-            
+
             if ([_path hasPrefix:@"blob:"]) {
                 RCTBlobManager *blobManager = [
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -326,7 +327,7 @@ using namespace facebook::react;
                     _pdfDocument = [[PDFDocument alloc] initWithData:blobData];
                 }
             } else {
-            
+
                 // decode file path
                 _path = (__bridge_transfer NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef)_path, CFSTR(""));
                 NSURL *fileURL = [NSURL fileURLWithPath:_path];
@@ -464,6 +465,18 @@ using namespace facebook::react;
             } else {
                 _pdfView.displayMode = kPDFDisplaySinglePageContinuous;
                 _pdfView.userInteractionEnabled = YES;
+            }
+        }
+
+        for (UIView *subview in _pdfView.subviews) {
+            if ([subview isKindOfClass:[UIScrollView class]]) {
+                UIScrollView *scrollView = (UIScrollView *)subview;
+
+                for(UIView *subview in self.subviews) {
+                    if ([subview isKindOfClass:[RCTView class]]) {
+                        [scrollView addSubview:subview];
+                    }
+                }
             }
         }
 
