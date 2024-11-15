@@ -769,7 +769,7 @@ using namespace facebook::react;
     });
 
     // Event appears to be consumed; broadcast for JS.
-    _onChange(@{ @"message": @"pageDoubleTap" });
+    // _onChange(@{ @"message": @"pageDoubleTap" });
 
     if (!_enableDoubleTapZoom) {
         return;
